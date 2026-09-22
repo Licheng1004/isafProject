@@ -1,0 +1,2 @@
+Model,Validation AUC,Test AUC,Test Brier Score,Test PCC / Accuracy,Economic Threshold,Test P&L,P&L per Applicant,Approval Rate
+LightGBM,0.799010052105992,0.7989312653124816,0.127934582735277,0.61725,0.86,10347804.184169,517.39020920845,0.47485

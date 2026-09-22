@@ -1,0 +1,2 @@
+Dataset,AUC,Brier Score,PCC / Accuracy,P&L,P&L per Applicant,Approval Rate,Default Rate Among Approved
+Shared Test 20k,0.7989312653124816,0.127934582735277,0.61725,10347804.184169,517.39020920845,0.47485,0.061914288722754555

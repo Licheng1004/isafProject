@@ -1,0 +1,13 @@
+{
+    "threshold": 0.86,
+    "features": [
+        "annual_income",
+        "debt_to_income_ratio",
+        "credit_score",
+        "loan_amount",
+        "interest_rate",
+        "loan_purpose",
+        "grade_subgrade"
+    ],
+    "include_sensitive_features": false
+}
