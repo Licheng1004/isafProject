@@ -1,0 +1,59 @@
+﻿Attribute,Group_A,Group_B,Test,CMH_chi2,p_raw,Covered_N,Pair_N,Coverage,Layers,p_Holm,Interpretation
+gender,Female,Male,Conditional_statistical_parity,0.145208375052324,0.7031571196574111,19882,19882,1.0,9,1.0,not rejected; not proof of fairness
+gender,Female,Male,Binned_sufficiency,0.10358285552667568,0.747571708662773,19882,19882,1.0,5,1.0,not rejected; not proof of fairness
+gender,Female,Other,Conditional_statistical_parity,3.7113418206378834,0.05404392833591839,10273,10273,1.0,9,1.0,not rejected; not proof of fairness
+gender,Female,Other,Binned_sufficiency,0.2587961154428338,0.6109484484368637,9623,10273,0.9367273435218534,3,1.0,not rejected; not proof of fairness
+gender,Male,Other,Conditional_statistical_parity,4.163901284988576,0.04129418727212487,9845,9845,1.0,9,1.0,not rejected; not proof of fairness
+gender,Male,Other,Binned_sufficiency,0.1759964184615372,0.6748366741000544,9232,9845,0.9377348908075165,3,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Married,Conditional_statistical_parity,0.9080829774646467,0.34062357334398063,10056,10056,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Married,Binned_sufficiency,0.08320729449981079,0.7729971354000706,10056,10056,1.0,5,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Single,Conditional_statistical_parity,0.5134731088962932,0.4736392266420537,10519,10519,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Single,Binned_sufficiency,0.08228280008921833,0.774227339823155,10519,10519,1.0,5,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Widowed,Conditional_statistical_parity,0.7296543413606743,0.3929952528516899,949,949,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Widowed,Binned_sufficiency,1.3282965026335602,0.24910849794347625,935,949,0.9852476290832455,4,1.0,not rejected; not proof of fairness
+marital_status,Married,Single,Conditional_statistical_parity,0.6911304732975603,0.4057801308325695,19051,19051,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Married,Single,Binned_sufficiency,2.263874271616638,0.13242240595496324,19051,19051,1.0,5,1.0,not rejected; not proof of fairness
+marital_status,Married,Widowed,Conditional_statistical_parity,1.5029750118453717,0.22021417459529366,9481,9481,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Married,Widowed,Binned_sufficiency,1.9004139897959071,0.16803198772897204,9320,9481,0.9830186689167809,4,1.0,not rejected; not proof of fairness
+marital_status,Single,Widowed,Conditional_statistical_parity,1.3712652011890314,0.24159462355679584,9944,9944,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Single,Widowed,Binned_sufficiency,2.6883907208939846,0.10108185605497476,9780,9944,0.9835076427996782,4,1.0,not rejected; not proof of fairness
+employment_status,Employed,Retired,Conditional_statistical_parity,116.05170912149346,4.630639614906318e-27,15760,15760,1.0,9,2.361626203602222e-25,conditional association detected
+employment_status,Employed,Retired,Binned_sufficiency,29.417103671309544,5.836030029613286e-08,13393,15760,0.8498096446700507,1,2.7429341139182443e-06,conditional association detected
+employment_status,Employed,Self-employed,Conditional_statistical_parity,1.159776314889758,0.28151193558128057,16996,16996,1.0,9,1.0,not rejected; not proof of fairness
+employment_status,Employed,Self-employed,Binned_sufficiency,0.5199720497756175,0.47085360500309936,16989,16996,0.9995881383855024,4,1.0,not rejected; not proof of fairness
+employment_status,Employed,Student,Conditional_statistical_parity,1332.8435285394885,8.240060558153403e-292,15634,15634,1.0,9,4.4496327014028375e-290,conditional association detected
+employment_status,Employed,Student,Binned_sufficiency,4.557364921683989,0.03277746740230694,15634,15634,1.0,5,1.0,not rejected; not proof of fairness
+employment_status,Employed,Unemployed,Conditional_statistical_parity,5648.258112280991,0.0,17288,17288,1.0,9,0.0,conditional association detected
+employment_status,Employed,Unemployed,Binned_sufficiency,1.331186345947821,0.24859427524844607,17288,17288,1.0,5,1.0,not rejected; not proof of fairness
+employment_status,Retired,Self-employed,Conditional_statistical_parity,101.757194838513,6.276182222151843e-24,2304,2304,1.0,9,3.1380911110759214e-22,conditional association detected
+employment_status,Retired,Self-employed,Binned_sufficiency,27.053252680738087,1.97926900385228e-07,2046,2304,0.8880208333333334,1,9.104637417720488e-06,conditional association detected
+employment_status,Retired,Student,Conditional_statistical_parity,809.3036757433814,5.120224998918886e-178,942,942,1.0,9,2.6625169994378207e-176,conditional association detected
+employment_status,Retired,Student,Binned_sufficiency,39.607404863660705,3.105037262446536e-10,568,942,0.6029723991507431,1,1.4904178859743374e-08,conditional association detected
+employment_status,Retired,Unemployed,Conditional_statistical_parity,2297.1418601562445,0.0,2596,2596,1.0,9,0.0,conditional association detected
+employment_status,Retired,Unemployed,Binned_sufficiency,,,0,2596,0.0,0,,not assessed
+employment_status,Self-employed,Student,Conditional_statistical_parity,882.135733770151,7.504827025637658e-194,2178,2178,1.0,9,3.9775583235879586e-192,conditional association detected
+employment_status,Self-employed,Student,Binned_sufficiency,3.1967955112558295,0.0737827074402002,1920,2178,0.8815426997245179,4,1.0,not rejected; not proof of fairness
+employment_status,Self-employed,Unemployed,Conditional_statistical_parity,2686.2463460729577,0.0,3832,3832,1.0,9,0.0,conditional association detected
+employment_status,Self-employed,Unemployed,Binned_sufficiency,2.234347959896896,0.13497355203360092,2000,3832,0.5219206680584552,4,1.0,not rejected; not proof of fairness
+employment_status,Student,Unemployed,Conditional_statistical_parity,46.09928309655454,1.1240958012759723e-11,619,2470,0.2506072874493927,3,5.508069426252264e-10,conditional association detected
+employment_status,Student,Unemployed,Binned_sufficiency,1.0849481879746106,0.29759324388255093,2470,2470,1.0,5,1.0,not rejected; not proof of fairness
+education_level,Bachelor's,High School,Conditional_statistical_parity,0.5093062702996339,0.4754393206526273,15624,15624,1.0,9,1.0,not rejected; not proof of fairness
+education_level,Bachelor's,High School,Binned_sufficiency,4.172306430683476,0.04108982801221653,15624,15624,1.0,5,1.0,not rejected; not proof of fairness
+education_level,Bachelor's,Master's,Conditional_statistical_parity,3.2354520951569223,0.07206041191306917,12633,12633,1.0,9,1.0,not rejected; not proof of fairness
+education_level,Bachelor's,Master's,Binned_sufficiency,0.6592666240490155,0.4168189719930314,12633,12633,1.0,5,1.0,not rejected; not proof of fairness
+education_level,Bachelor's,Other,Conditional_statistical_parity,0.979361068512295,0.3223565989703889,10447,10447,1.0,9,1.0,not rejected; not proof of fairness
+education_level,Bachelor's,Other,Binned_sufficiency,0.26847220649406167,0.6043584750445742,10447,10447,1.0,5,1.0,not rejected; not proof of fairness
+education_level,Bachelor's,PhD,Conditional_statistical_parity,9.060164254662844,0.0026123850928728683,9913,9913,1.0,9,0.11755732917927908,not rejected; not proof of fairness
+education_level,Bachelor's,PhD,Binned_sufficiency,1.4874851556114828,0.22260706245422912,9729,9913,0.9814385150812065,4,1.0,not rejected; not proof of fairness
+education_level,High School,Master's,Conditional_statistical_parity,1.2410535541284071,0.2652681048292971,9179,9179,1.0,9,1.0,not rejected; not proof of fairness
+education_level,High School,Master's,Binned_sufficiency,5.5881179956182585,0.018082714532079585,9179,9179,1.0,5,0.7775567248794222,not rejected; not proof of fairness
+education_level,High School,Other,Conditional_statistical_parity,0.40637336406615665,0.5238160058204593,6993,6993,1.0,9,1.0,not rejected; not proof of fairness
+education_level,High School,Other,Binned_sufficiency,0.24280102563355616,0.6221903457924014,6993,6993,1.0,5,1.0,not rejected; not proof of fairness
+education_level,High School,PhD,Conditional_statistical_parity,7.18926535605337,0.007334100174266819,6459,6459,1.0,9,0.32270040766774005,not rejected; not proof of fairness
+education_level,High School,PhD,Binned_sufficiency,0.2560416077708759,0.6128527596684511,6363,6459,0.9851370181142591,4,1.0,not rejected; not proof of fairness
+education_level,Master's,Other,Conditional_statistical_parity,0.009964684086816588,0.9204846380923717,4002,4002,1.0,9,1.0,not rejected; not proof of fairness
+education_level,Master's,Other,Binned_sufficiency,0.6579761901776897,0.41727533471269995,4002,4002,1.0,5,1.0,not rejected; not proof of fairness
+education_level,Master's,PhD,Conditional_statistical_parity,5.015848958515858,0.025116310873533533,3468,3468,1.0,9,1.0,not rejected; not proof of fairness
+education_level,Master's,PhD,Binned_sufficiency,2.515723983576366,0.11271585658533792,3425,3468,0.98760092272203,4,1.0,not rejected; not proof of fairness
+education_level,Other,PhD,Conditional_statistical_parity,4.11118410339851,0.042600526227202194,1282,1282,1.0,9,1.0,not rejected; not proof of fairness
+education_level,Other,PhD,Binned_sufficiency,0.6392810329973526,0.42397126547864306,1158,1282,0.9032761310452418,3,1.0,not rejected; not proof of fairness
