@@ -1,2 +1,0 @@
-Dataset,AUC,Brier Score,PCC / Accuracy,P&L,P&L per Applicant,Approval Rate,Default Rate Among Approved
-Validation,0.799010052105992,0.12706605594503675,0.6261,10426242.868747,521.31214343735,0.4856,0.0625
