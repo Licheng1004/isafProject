@@ -1,8 +1,0 @@
-Feature,Mean Absolute SHAP
-debt_to_income_ratio,0.81572026
-credit_score,0.4529743
-grade_subgrade,0.21067768
-loan_amount,0.12957522
-annual_income,0.118115716
-interest_rate,0.08345631
-loan_purpose,0.059813775
