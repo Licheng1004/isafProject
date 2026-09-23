@@ -1,0 +1,29 @@
+Protected Attribute,Candidate Feature,Association Measure,Association Value
+gender,loan_purpose,Cramer's V,0.007364291203150392
+gender,grade_subgrade,Cramer's V,0.011503845226875146
+gender,annual_income,Eta-squared,1.8628405996878232e-05
+gender,debt_to_income_ratio,Eta-squared,1.0497289117375724e-05
+gender,credit_score,Eta-squared,3.440194280854857e-05
+gender,loan_amount,Eta-squared,1.1029297328873843e-05
+gender,interest_rate,Eta-squared,1.2651711440201543e-05
+marital_status,loan_purpose,Cramer's V,0.011007065626200808
+marital_status,grade_subgrade,Cramer's V,0.014657197127365747
+marital_status,annual_income,Eta-squared,9.467934738216228e-05
+marital_status,debt_to_income_ratio,Eta-squared,2.4903821347247277e-05
+marital_status,credit_score,Eta-squared,0.00010693242442370797
+marital_status,loan_amount,Eta-squared,1.1947612764712907e-05
+marital_status,interest_rate,Eta-squared,3.9050124233419586e-05
+employment_status,loan_purpose,Cramer's V,0.014962861481110609
+employment_status,grade_subgrade,Cramer's V,0.05230366684939631
+employment_status,annual_income,Eta-squared,1.2334982870691676e-05
+employment_status,debt_to_income_ratio,Eta-squared,0.03074223003776025
+employment_status,credit_score,Eta-squared,0.009720408196418074
+employment_status,loan_amount,Eta-squared,7.992847693298109e-05
+employment_status,interest_rate,Eta-squared,0.002399143615692969
+education_level,loan_purpose,Cramer's V,0.011569581800515575
+education_level,grade_subgrade,Cramer's V,0.014786103726301656
+education_level,annual_income,Eta-squared,6.103300084669949e-05
+education_level,debt_to_income_ratio,Eta-squared,6.749018809289969e-05
+education_level,credit_score,Eta-squared,2.4504483814160584e-05
+education_level,loan_amount,Eta-squared,4.814933005157275e-05
+education_level,interest_rate,Eta-squared,8.476107794657682e-05

@@ -1,0 +1,2 @@
+Model,Final Seed,Validation AUC,Shared Test AUC,Shared Test PR-AUC,Shared Test Gini,Shared Test KS,Shared Test Brier Score,Shared Test PCC / Accuracy,Economic Threshold,Shared Test P&L,P&L per Applicant,Approval Rate,Default Rate Among Approved,Sensitive Features Included,Fast Mode
+XGBoost,42,0.8094095761816281,0.8105107540162133,0.9394910943086217,0.6210215080324266,0.46437287641203356,0.12430159961943521,0.68365,0.8300000000000001,11207720.243634,560.3860121817,0.56295,0.07149835687005951,False,False

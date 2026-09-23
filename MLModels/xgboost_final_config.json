@@ -1,0 +1,49 @@
+{
+  "model": "XGBoost",
+  "target": "loan_paid_back",
+  "target_mapping": {
+    "1": "repaid",
+    "0": "default"
+  },
+  "shared_test_path": "/Users/oscar/VSCodeWorkspace/isaf-project/data/test_eval_20k.csv",
+  "shared_test_rows": 20000,
+  "training_pool_rows": 573994,
+  "fit_fraction": 0.7,
+  "early_stop_fraction": 0.1,
+  "threshold_fraction": 0.1,
+  "stability_fraction": 0.1,
+  "final_seed": 42,
+  "stability_seeds": [
+    1,
+    10,
+    42,
+    100,
+    2026
+  ],
+  "fast_mode": false,
+  "features": [
+    "annual_income",
+    "debt_to_income_ratio",
+    "credit_score",
+    "loan_amount",
+    "interest_rate",
+    "loan_purpose",
+    "grade_subgrade"
+  ],
+  "sensitive_attributes": [
+    "gender",
+    "marital_status",
+    "employment_status",
+    "education_level"
+  ],
+  "include_sensitive_features": false,
+  "use_class_weight": false,
+  "threshold": 0.8300000000000001,
+  "tost_delta": 0.02,
+  "tost_alpha": 0.05,
+  "pnl_rule": {
+    "approved_and_repaid": "+loan_amount * interest_rate / 100",
+    "approved_and_defaulted": "-loan_amount * 0.60",
+    "rejected": 0
+  }
+}
