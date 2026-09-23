@@ -1,0 +1,19 @@
+﻿Attribute,Group_A,Group_B,Test,CMH_chi2,p_raw,Covered_N,Pair_N,Coverage,Layers,p_Holm,Interpretation
+gender,Female,Male,Conditional_statistical_parity,0.4276844850480222,0.5131273288782652,19882,19882,1.0,9,1.0,not rejected; not proof of fairness
+gender,Female,Male,Binned_sufficiency,0.017224931010974973,0.8955824603428911,19882,19882,1.0,5,1.0,not rejected; not proof of fairness
+gender,Female,Other,Conditional_statistical_parity,4.462448499098447,0.034647799341155146,10273,10273,1.0,9,0.5890125887996375,not rejected; not proof of fairness
+gender,Female,Other,Binned_sufficiency,0.17533996179437053,0.675408974325183,9622,10273,0.9366300009734255,3,1.0,not rejected; not proof of fairness
+gender,Male,Other,Conditional_statistical_parity,5.133972662510195,0.023461968532771715,9845,9845,1.0,9,0.4223154335898909,not rejected; not proof of fairness
+gender,Male,Other,Binned_sufficiency,0.12346620640616386,0.7253050971175401,9225,9845,0.9370238699847638,3,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Married,Conditional_statistical_parity,0.1718834911610344,0.6784432857915561,10056,10056,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Married,Binned_sufficiency,0.0765005871210779,0.7820969445162254,10056,10056,1.0,5,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Single,Conditional_statistical_parity,0.06265806569754907,0.8023430368020057,10519,10519,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Single,Binned_sufficiency,0.10086814584497503,0.7507903019888089,10519,10519,1.0,5,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Widowed,Conditional_statistical_parity,0.8158264953110801,0.3664032331746284,949,949,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Divorced,Widowed,Binned_sufficiency,1.2023690279999326,0.2728486995580935,935,949,0.9852476290832455,4,1.0,not rejected; not proof of fairness
+marital_status,Married,Single,Conditional_statistical_parity,0.39914320578540174,0.5275320730591093,19051,19051,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Married,Single,Binned_sufficiency,2.4686335802592247,0.11613884997547204,19051,19051,1.0,5,1.0,not rejected; not proof of fairness
+marital_status,Married,Widowed,Conditional_statistical_parity,1.0542032541031299,0.3045410218609861,9481,9481,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Married,Widowed,Binned_sufficiency,1.8088173667621348,0.1786501629957511,9322,9481,0.9832296171289948,4,1.0,not rejected; not proof of fairness
+marital_status,Single,Widowed,Conditional_statistical_parity,1.0225396896872843,0.31191734420313366,9944,9944,1.0,9,1.0,not rejected; not proof of fairness
+marital_status,Single,Widowed,Binned_sufficiency,2.6234549615766265,0.10529495344858684,9782,9944,0.9837087691069992,4,1.0,not rejected; not proof of fairness
