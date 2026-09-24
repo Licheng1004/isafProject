@@ -4,9 +4,14 @@ An interactive app for the client: score an applicant with the three models, see
 on the four dimensions of the brief (performance, fairness, stability, interpretability) plus a recommendation.
 
 ```bash
-pip install -r app/requirements.txt
+pip install -r app/requirements.txt         # xgboost >= 3 and tabpfn >= 9 are REQUIRED (see below)
 streamlit run app/streamlit_app.py          # opens http://localhost:8501
+# on Ethan's Mac (conda env "isaf"):  bash app/run_app.sh
 ```
+
+⚠️ **Use the right environment.** The saved XGBoost model comes from xgboost 3. Read by xgboost 2.x, it loads
+*without error* but re-codes the categories and gives wrong probabilities (errors up to 0.33). The app therefore
+self-tests every model against its saved predictions at start-up and refuses to run in a wrong environment.
 
 | Tab | What the client can do |
 |---|---|
