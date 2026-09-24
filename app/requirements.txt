@@ -1,0 +1,12 @@
+# web app (Python 3.11+). TabPFN weights are downloaded on first use (Prior Labs licence, see TabularFoundationModel/README.md)
+streamlit>=1.50
+altair>=5
+numpy>=2.0
+pandas>=2.2
+scipy>=1.13
+scikit-learn>=1.6
+statsmodels>=0.14
+xgboost>=2.1
+fairlearn>=0.13
+torch>=2.5
+tabpfn>=9.0

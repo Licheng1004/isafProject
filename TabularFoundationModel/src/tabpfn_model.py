@@ -32,8 +32,9 @@ def category_levels(df: pd.DataFrame) -> dict:
 
 
 def encode(df: pd.DataFrame, levels: dict) -> pd.DataFrame:
-    """Raw applicant table -> numeric table (categoricals as integer codes), columns = FEATURES."""
-    X = df[FEATURES].copy()
+    """Raw applicant table -> numeric table (categoricals as integer codes), columns = FEATURES.
+    Columns the model does not use (e.g. gender, marital status) may be absent: they are coded -1."""
+    X = df.reindex(columns=FEATURES).copy()
     for c in CAT_COLS:
         X[c] = pd.Categorical(X[c], categories=levels[c]).codes
     return X.astype(float)
