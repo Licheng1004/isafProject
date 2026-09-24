@@ -1,0 +1,5 @@
+﻿Dimension,Implementation,Sections
+Predictive performance,AUC/AP/Gini/KS/Brier/P&L/confidence intervals/XPER,"3, 8, 15"
+Interpretability,SHAP/PI/PDP/ICE/LIME/disagreements/customer cases,5–8
+Stability,Common-sample performance/importance distances/customer contributions/decision flips/noise/training constraints,"3, 9–10"
+Fairness,Group gaps/TOST/FPDP/candidate associations/CMH/binned sufficiency/mitigation trade-offs,"4, 11–15"

@@ -1,0 +1,4 @@
+﻿id,P_repaid,Threshold,Decision,LIME_holdout_R2,LIME_at_instance,LIME_point_error,annual_income,debt_to_income_ratio,credit_score,loan_amount,interest_rate,loan_purpose,grade_subgrade,employment_status,education_level
+351822,0.0006364492583088577,0.84,Reject,0.7447085040951363,0.008142725800778572,0.007506276542469714,37438.05,0.217,637,11750.19,14.93,Debt consolidation,D3,Unemployed,Other
+231848,0.9998965263366699,0.84,Approve,0.06253330546316205,1.011979218334553,0.012082691997883144,39473.4,0.041,784,12409.92,9.97,Education,B2,Retired,Bachelor's
+125692,0.8400107622146606,0.84,Approve,0.08765548066101403,0.8291972475603938,0.010813514654266831,15703.37,0.072,467,4582.07,15.99,Medical,F3,Self-employed,Bachelor's

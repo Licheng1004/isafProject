@@ -1,0 +1,7 @@
+﻿Variant,Metric,CI_low,CI_high
+baseline,AUC,0.9117217243688541,0.9213981830858453
+baseline,PNL_per_applicant,843.6479380759363,903.7853139805875
+gender_reweight,AUC,0.912205229472481,0.9217773481672731
+gender_reweight,PNL_per_applicant,847.6326084653789,912.0103837142663
+gender_reweight minus baseline (paired),AUC,4.813442225526099e-05,0.0007830697064517919
+gender_reweight minus baseline (paired),PNL_per_applicant,-2.3804378164087834,12.953497392249966
