@@ -17,7 +17,7 @@
   },
   "n_context": 10000,
   "n_estimators": 4,
-  "latency_ms_per_applicant": 57.053160667419434,
+  "latency_ms_per_applicant": 56.27704977989197,
   "threshold": 0.79,
   "statistical": {
     "AUC": 0.9148530900849285,
