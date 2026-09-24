@@ -1,0 +1,95 @@
+{
+  "threshold": 0.81,
+  "n_estimators": 4,
+  "seeds": [
+    1000,
+    1001,
+    1002,
+    1003,
+    1004
+  ],
+  "n_contexts": 5,
+  "features": [
+    "annual_income",
+    "debt_to_income_ratio",
+    "credit_score",
+    "loan_amount",
+    "interest_rate",
+    "education_level",
+    "employment_status",
+    "loan_purpose",
+    "grade_subgrade"
+  ],
+  "fingerprint": false,
+  "levels": {
+    "gender": [
+      "Female",
+      "Male",
+      "Other"
+    ],
+    "marital_status": [
+      "Divorced",
+      "Married",
+      "Single",
+      "Widowed"
+    ],
+    "education_level": [
+      "Bachelor's",
+      "High School",
+      "Master's",
+      "Other",
+      "PhD"
+    ],
+    "employment_status": [
+      "Employed",
+      "Retired",
+      "Self-employed",
+      "Student",
+      "Unemployed"
+    ],
+    "loan_purpose": [
+      "Business",
+      "Car",
+      "Debt consolidation",
+      "Education",
+      "Home",
+      "Medical",
+      "Other",
+      "Vacation"
+    ],
+    "grade_subgrade": [
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5"
+    ]
+  },
+  "test_auc": 0.9159361246143569,
+  "lgd": 0.7
+}

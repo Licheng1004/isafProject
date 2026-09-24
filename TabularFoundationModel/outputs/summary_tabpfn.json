@@ -1,0 +1,417 @@
+{
+  "model": "TabPFN",
+  "reproducibility": {
+    "model": "TabPFN (Prior Labs), in-context learning, no training on our data",
+    "checkpoint": "TabPFN-v3.5",
+    "tabpfn package": "9.0.0",
+    "torch": "2.14.0",
+    "scikit-learn": "1.9.1",
+    "shap": "0.51.0",
+    "python": "3.11.16",
+    "machine": "macOS-15.3.1-arm64-arm-64bit",
+    "device": "mps",
+    "model inputs": "annual_income, debt_to_income_ratio, credit_score, loan_amount, interest_rate, education_level, employment_status, loan_purpose, grade_subgrade",
+    "n_estimators": 4,
+    "context rows": 10000,
+    "seed": 42,
+    "query date": "2026-09-24"
+  },
+  "n_context": 10000,
+  "n_estimators": 4,
+  "latency_ms_per_applicant": 55.16947031021118,
+  "threshold": 0.8,
+  "statistical": {
+    "AUC": 0.9149039865090876,
+    "Gini": 0.8298079730181751,
+    "PR-AUC": 0.9725753748918364,
+    "KS": 0.6661291639248137,
+    "Brier": 0.07417016476392746,
+    "LogLoss": 0.25343087315559387,
+    "ECE": 0.004905729977786542,
+    "AUC_CI95": [
+      0.9101639158344852,
+      0.9201507568351575
+    ]
+  },
+  "economic": {
+    "threshold": 0.8,
+    "profit": 16024446.151157001,
+    "profit_expected_value_rule": 16466445.799023002,
+    "profit_approve_all": -12911191.956201997,
+    "profit_oracle": 29275220.675798,
+    "share_of_oracle_captured": 0.6858994709924735,
+    "approval_rate": 0.75435,
+    "default_rate_among_approved": 0.05972028899052162,
+    "good_payers_rejected": 0.11204306459689534,
+    "profit_CI95": [
+      15296038.613418201,
+      16802097.43890035
+    ],
+    "profit_grade_rule_status_quo": 2086989.117642
+  },
+  "interpretability": {
+    "permutation_importance": {
+      "employment_status": 0.2042305851532784,
+      "debt_to_income_ratio": 0.10299062948688886,
+      "credit_score": 0.028524018237235105,
+      "grade_subgrade": 0.0028763318975288943,
+      "education_level": 0.00108629940300764,
+      "annual_income": 0.000591954457291044,
+      "loan_amount": 0.00016373208393155592,
+      "loan_purpose": 0.00010390689941808251,
+      "interest_rate": 5.352779666983887e-05
+    },
+    "mean_abs_shap": {
+      "employment_status": 0.17306746315050986,
+      "debt_to_income_ratio": 0.06569446198889635,
+      "credit_score": 0.04142114838003181,
+      "grade_subgrade": 0.008284083210382962,
+      "education_level": 0.004489340595100659,
+      "annual_income": 0.0027768664015457084,
+      "loan_amount": 0.0026328650169307314,
+      "interest_rate": 0.002159485941010648,
+      "loan_purpose": 0.0012288291131699242
+    },
+    "xper": {
+      "AUC": {
+        "phi_0 (no information)": 0.4826475477971738,
+        "employment": 0.23199403637371213,
+        "debt-to-income": 0.14270510592206354,
+        "credit score": 0.04939975398204821,
+        "grade & rate": 0.008194895757239891,
+        "income & amount": 0.0013750871138651787,
+        "education & purpose": 0.00257951501717087,
+        "= full model": 0.9188959419632736
+      },
+      "profit (k\u20ac)": {
+        "phi_0 (no information)": -446.0004554959999,
+        "employment": 793.2656460074331,
+        "debt-to-income": 465.7254767418833,
+        "credit score": 80.86344104515003,
+        "grade & rate": 16.54732451275003,
+        "income & amount": -4.183858308466679,
+        "education & purpose": -1.7100633297499908,
+        "= full model": 904.5075111730001
+      }
+    },
+    "surrogate_fidelity_R2": 0.9187848689894741,
+    "shap_vs_lime_agreement": {
+      "REJECTED": {
+        "spearman": 0.6266795614405122,
+        "top-3 agreement": 1.0
+      },
+      "APPROVED": {
+        "spearman": 0.7659416862050705,
+        "top-3 agreement": 1.0
+      }
+    }
+  },
+  "stability": {
+    "context resampling": {
+      "mean_abs_prob_change": 0.024585682898759842,
+      "decision_flip_rate": 0.037599999999999995,
+      "mean_per_row_std": 0.018452400341629982,
+      "material flips": 0.019518716577540108,
+      "AUC mean": 0.9195978614003224,
+      "AUC std": 0.0014068448328521605
+    },
+    "seed only": {
+      "mean_abs_prob_change": 0.0054624853655695915,
+      "decision_flip_rate": 0.0088,
+      "mean_per_row_std": 0.0041067409329116344,
+      "material flips": 0.0,
+      "AUC mean": 0.9208842828272493,
+      "AUC std": 0.00027106259179791756
+    },
+    "noise 1%": {
+      "mean_abs_prob_change": 0.02058459259569645,
+      "decision_flip_rate": 0.0385,
+      "mean_per_row_std": 0.010292296297848225,
+      "material flips": 0.017269293038316244,
+      "AUC mean": NaN,
+      "AUC std": NaN
+    },
+    "noise 5%": {
+      "mean_abs_prob_change": 0.025746792554855347,
+      "decision_flip_rate": 0.0505,
+      "mean_per_row_std": 0.012873396277427673,
+      "material flips": 0.028062601187263895,
+      "AUC mean": NaN,
+      "AUC std": NaN
+    },
+    "importance_spearman": 0.7905188738551315,
+    "importance_distance": 0.016016781098059336,
+    "auc_by_context_size": {
+      "1000": 0.908339675372848,
+      "2500": 0.9125917730423883,
+      "5000": 0.9178487375610754,
+      "10000": 0.9212958225678545
+    }
+  },
+  "fairness": {
+    "summary": {
+      "gender": {
+        "DP difference": 0.07010627416609028,
+        "DP ratio": 0.9147160788494985,
+        "passes 4/5 rule": true,
+        "EO difference": 0.04414178646025313,
+        "min group AUC": 0.911489537197932,
+        "max group AUC": 0.9361111111111111
+      },
+      "marital_status": {
+        "DP difference": 0.02816088581098264,
+        "DP ratio": 0.962722222941565,
+        "passes 4/5 rule": true,
+        "EO difference": 0.102924944812362,
+        "min group AUC": 0.8629106556399778,
+        "max group AUC": 0.9174326647450971
+      },
+      "education_level": {
+        "DP difference": 0.07355449875630193,
+        "DP ratio": 0.910100057075631,
+        "passes 4/5 rule": true,
+        "EO difference": 0.08995988251307399,
+        "min group AUC": 0.8824256620469776,
+        "max group AUC": 0.9242786545512514
+      },
+      "employment_status": {
+        "DP difference": 0.9990300678952473,
+        "DP ratio": 0.0009699321047526673,
+        "passes 4/5 rule": false,
+        "EO difference": 1.0,
+        "min group AUC": 0.8091000378379952,
+        "max group AUC": 0.9783834586466165
+      }
+    },
+    "tests_pvalues": {
+      "gender": {
+        "statistical parity": 0.1869230333564296,
+        "conditional statistical parity": 0.6600682953397614,
+        "equal opportunity": 0.30844136363072466,
+        "predictive equality": 0.542442615804282,
+        "equalized odds": 0.46644781457015905,
+        "sufficiency": 0.3495201735422823
+      },
+      "gender (F vs M)": {
+        "statistical parity": 0.5173553208404176,
+        "conditional statistical parity": 0.7532359217692316,
+        "equal opportunity": 0.45289276021757374,
+        "predictive equality": 0.26876852409071683,
+        "equalized odds": 0.4093389731403334,
+        "sufficiency": 0.029327032192164516
+      },
+      "marital_status": {
+        "statistical parity": 0.612119586279745,
+        "conditional statistical parity": 0.3808619107380839,
+        "equal opportunity": 0.005992854706879184,
+        "predictive equality": 0.03274906560069129,
+        "equalized odds": 0.0016867335584588791,
+        "sufficiency": 0.1540841036461823
+      },
+      "education_level": {
+        "statistical parity": 0.0033927576641877397,
+        "conditional statistical parity": 0.015290308271310058,
+        "equal opportunity": 0.20691923397587622,
+        "predictive equality": 0.006426241615027605,
+        "equalized odds": 0.009650622907738712,
+        "sufficiency": 0.8892860085585571
+      },
+      "employment_status": {
+        "statistical parity": 0.0,
+        "conditional statistical parity": 0.0,
+        "equal opportunity": 0.0,
+        "predictive equality": 1.4144708437491432e-303,
+        "equalized odds": 0.0,
+        "sufficiency": 0.00021145921117809912
+      }
+    },
+    "tost": {
+      "gender: Female vs Male": {
+        "gap (ref - protected)": -0.003956176944215795,
+        "delta": 0.02,
+        "z_L": 2.625289728415983,
+        "z_U": 3.9200074100226,
+        "critical value": 1.6449302788925608,
+        "p-value": 0.004332076548546655,
+        "certified fair": true,
+        "n protected": 10155
+      },
+      "marital_status: Single vs Married": {
+        "gap (ref - protected)": 0.0003859549920833816,
+        "delta": 0.02,
+        "z_L": 3.2713136241601446,
+        "z_U": 3.147446008009192,
+        "critical value": 1.6449336229463027,
+        "p-value": 0.0008247871732690641,
+        "certified fair": true,
+        "n protected": 9757
+      },
+      "marital_status: Divorced vs Married": {
+        "gap (ref - protected)": 0.01658846872675457,
+        "delta": 0.02,
+        "z_L": 2.2140376425223343,
+        "z_U": 0.20643822823020652,
+        "critical value": 1.645005199501184,
+        "p-value": 0.418226396128898,
+        "certified fair": false,
+        "n protected": 762
+      },
+      "marital_status: Widowed vs Married": {
+        "gap (ref - protected)": 0.02816088581098264,
+        "delta": 0.02,
+        "z_L": 1.465110288718366,
+        "z_U": -0.24826365971864658,
+        "critical value": 1.6450143948578715,
+        "p-value": 0.5980321038824647,
+        "certified fair": false,
+        "n protected": 187
+      },
+      "education_level: High School vs Bachelor's": {
+        "gap (ref - protected)": -0.017574816975469698,
+        "delta": 0.02,
+        "z_L": 0.34393322517752095,
+        "z_U": 5.32876399723739,
+        "critical value": 1.6449511727242316,
+        "p-value": 0.3654505666356225,
+        "certified fair": false,
+        "n protected": 6085
+      },
+      "education_level: PhD vs Bachelor's": {
+        "gap (ref - protected)": -0.07355449875630193,
+        "delta": 0.02,
+        "z_L": -2.62040916953978,
+        "z_U": 4.577599867160811,
+        "critical value": 1.645007386658183,
+        "p-value": 0.9956020854350415,
+        "certified fair": false,
+        "n protected": 374
+      }
+    },
+    "fpdp_candidates": [
+      "employment_status",
+      "credit_score"
+    ],
+    "mitigation": {
+      "with gender & marital (reference only: NOT allowed)": {
+        "AUC": 0.9148530900849285,
+        "profit (M\u20ac)": 15.958758504994002,
+        "SP p-value education": 0.00047898357672755486,
+        "EOdds p-value marital": 0.0022272585509521777,
+        "SP p-value gender": 0.13380320864869727,
+        "TOST F vs M certified": true
+      },
+      "main model (no gender / marital)": {
+        "AUC": 0.9149039865090876,
+        "profit (M\u20ac)": 16.024446151157,
+        "SP p-value education": 0.0033927576641877397,
+        "EOdds p-value marital": 0.0016867335584588791,
+        "SP p-value gender": 0.1869230333564296,
+        "TOST F vs M certified": true
+      },
+      "main model without employment_status": {
+        "AUC": 0.7969038858984301,
+        "profit (M\u20ac)": 8.761470545532,
+        "SP p-value education": 8.354506064916308e-08,
+        "EOdds p-value marital": 0.1331948368132663,
+        "SP p-value gender": 0.3034636751662418,
+        "TOST F vs M certified": true
+      }
+    }
+  },
+  "robust_model": {
+    "features": [
+      "annual_income",
+      "debt_to_income_ratio",
+      "credit_score",
+      "loan_amount",
+      "interest_rate",
+      "education_level",
+      "employment_status",
+      "loan_purpose",
+      "grade_subgrade"
+    ],
+    "n_contexts": 5,
+    "fingerprint": false,
+    "threshold": 0.81,
+    "statistical": {
+      "AUC": 0.9159361246143569,
+      "Gini": 0.8318722492287138,
+      "PR-AUC": 0.9727951525409662,
+      "KS": 0.6682655693281473,
+      "Brier": 0.07370557636022568,
+      "LogLoss": 0.25183138251304626,
+      "AUC_CI95": [
+        0.9113390968945642,
+        0.9210046880674722
+      ]
+    },
+    "economic": {
+      "threshold": 0.81,
+      "profit": 16086917.998564001,
+      "profit_expected_value_rule": 16466375.265676003,
+      "profit_approve_all": -12911191.956201997,
+      "profit_oracle": 29275220.675798,
+      "share_of_oracle_captured": 0.6873803233216808,
+      "approval_rate": 0.74465,
+      "default_rate_among_approved": 0.05754381252937624,
+      "good_payers_rejected": 0.1214321482223335,
+      "profit_CI95": [
+        15348511.883931251,
+        16803669.285951953
+      ]
+    },
+    "stability": {
+      "single member vs single member": {
+        "mean_abs_prob_change": 0.02415059320628643,
+        "decision_flip_rate": 0.0387,
+        "mean_per_row_std": 0.01801326870918274,
+        "material flips": 0.01082191780821918
+      },
+      "bag A vs bag B": {
+        "mean_abs_prob_change": 0.011191814206540585,
+        "decision_flip_rate": 0.0145,
+        "mean_per_row_std": 0.005595907103270292,
+        "material flips": 0.0021929824561403508
+      },
+      "noise 1% (bagged)": {
+        "mean_abs_prob_change": 0.014302337542176247,
+        "decision_flip_rate": 0.0215,
+        "mean_per_row_std": 0.007151168771088123
+      }
+    },
+    "fairness_tests_pvalues": {
+      "gender": {
+        "statistical parity": 0.13529587845023175,
+        "conditional statistical parity": 0.7777779586069702,
+        "equal opportunity": 0.39021765962660493,
+        "predictive equality": 0.21889397847534242,
+        "equalized odds": 0.2955590370585183,
+        "sufficiency": 0.46834697606509246
+      },
+      "marital_status": {
+        "statistical parity": 0.6178929549517385,
+        "conditional statistical parity": 0.2612101011636552,
+        "equal opportunity": 0.013132109284486293,
+        "predictive equality": 0.00808143935478178,
+        "equalized odds": 0.0009583431286782476,
+        "sufficiency": 0.05935255349253426
+      },
+      "education_level": {
+        "statistical parity": 0.0016908401801218683,
+        "conditional statistical parity": 0.0071778759505915085,
+        "equal opportunity": 0.7829813646571522,
+        "predictive equality": 0.0014095702856145558,
+        "equalized odds": 0.012644237777404043,
+        "sufficiency": 0.7243204021817089
+      },
+      "employment_status": {
+        "statistical parity": 0.0,
+        "conditional statistical parity": 0.0,
+        "equal opportunity": 0.0,
+        "predictive equality": 1.1390306182241505e-282,
+        "equalized odds": 0.0,
+        "sufficiency": 0.00031796839043450793
+      }
+    }
+  }
+}

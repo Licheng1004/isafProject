@@ -1,0 +1,2 @@
+# the team .gitignore excludes *.pkl: our cached TabPFN results must be committed (rerun in ~1 min instead of ~3 h)
+!*.pkl
