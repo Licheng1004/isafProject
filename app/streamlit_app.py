@@ -30,6 +30,12 @@ from isaf_eval import fairness_tests, tost_parity  # noqa: E402
 
 st.set_page_config(page_title="Loan approval: 3 models compared", page_icon="🏦", layout="wide")
 
+# Compatibility with older Streamlit versions (< 1.51 has no **STRETCH nor delta_arrow)
+import inspect  # noqa: E402
+_NEW_WIDTH = "width" in inspect.signature(st.altair_chart).parameters
+STRETCH = {"width": "stretch"} if _NEW_WIDTH else {"use_container_width": True}
+_ARROW_OFF = {"delta_arrow": "off"} if "delta_arrow" in inspect.signature(st.metric).parameters else {}
+
 # ----------------------------------------------------------------------------------------------
 # Constants: one fixed colour per model (validated categorical palette, slots 1-3)
 # ----------------------------------------------------------------------------------------------
@@ -73,6 +79,9 @@ if not (ART / "test_predictions.csv.gz").exists():
     st.error("Artifacts missing: run `python app/build_artifacts.py` first."); st.stop()
 TEST, VALID, LR, XMETA, TYPICAL, NOISE, TFM_SUMMARY = load_artifacts()
 BOOSTER = load_xgb()
+ENV_HINT = ("Run the app with the project environment (xgboost ≥ 3, tabpfn ≥ 9): "
+            "`pip install -r app/requirements.txt`, then `streamlit run app/streamlit_app.py` from that environment "
+            "(on Ethan's Mac: `bash app/run_app.sh`).")
 LEVELS = {c: sorted(TEST[c].unique()) for c in ["loan_purpose", "grade_subgrade", "employment_status", "education_level"]}
 
 # ----------------------------------------------------------------------------------------------
@@ -125,12 +134,19 @@ def tabpfn_worker():
     """Starts the TabPFN process once; it warms up in the background (≈1 min) without blocking the page."""
     proc = subprocess.Popen([sys.executable, str(APP / "tabpfn_worker.py")], stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, bufsize=1)
-    w = {"proc": proc, "lock": threading.Lock(), "ready": threading.Event()}
-    threading.Thread(target=lambda: proc.stdout.readline() and w["ready"].set(), daemon=True).start()
+    w = {"proc": proc, "lock": threading.Lock(), "ready": threading.Event(), "hello": {}}
+
+    def wait_ready():
+        line = proc.stdout.readline()
+        if line:
+            w["hello"] = json.loads(line)
+            w["ready"].set()
+    threading.Thread(target=wait_ready, daemon=True).start()
     return w
 
 def tabpfn_ready() -> bool:
-    return tabpfn_worker()["ready"].is_set()
+    w = tabpfn_worker()
+    return w["ready"].is_set() and w["hello"].get("max_diff", 1.0) < 0.01
 
 def tabpfn_proba(df) -> np.ndarray:
     w = tabpfn_worker()
@@ -148,6 +164,17 @@ def tabpfn_contrib(row: pd.DataFrame) -> tuple[float, pd.Series]:
     batch = pd.concat([row] + [row.assign(**{f: TYPICAL[f]}) for f in INPUTS], ignore_index=True)
     p = tabpfn_proba(batch)
     return float(p[0]), pd.Series(p[0] - p[1:], index=INPUTS)
+
+# Self-test: a model loaded with another library version can silently give different predictions
+# (e.g. xgboost 2.x reading a 3.x model re-codes the categories). Refuse to show wrong numbers.
+_chk = TEST.head(500)
+_diff = {"Logistic regression": float(np.abs(lr_proba(_chk) - _chk.p_lr).max()),
+         "XGBoost": float(np.abs(xgb_proba(_chk) - _chk.p_xgb).max())}
+_bad = {m: d for m, d in _diff.items() if d > 1e-3}
+if _bad:
+    st.error("⚠️ The models do not reproduce their saved predictions in this Python environment "
+             f"({', '.join(f'{m}: max error {d:.3f}' for m, d in _bad.items())}; xgboost {xgb.__version__}). " + ENV_HINT)
+    st.stop()
 
 # ----------------------------------------------------------------------------------------------
 # Economics: each model's threshold is chosen on ITS OWN validation sample for the chosen LGD
@@ -219,7 +246,7 @@ with tabs[0]:
         if src.startswith("A real"):
             st.session_state.setdefault("row", 13)
             c1, c2 = st.columns([3, 1])
-            if c2.button("🎲", width="stretch", help="Random applicant"):
+            if c2.button("🎲", **STRETCH, help="Random applicant"):
                 st.session_state.row = int(np.random.default_rng().integers(len(TEST)))
             idx = c1.number_input("Row of the test set", 0, len(TEST) - 1, key="row")
             base = TEST.iloc[idx]
@@ -238,7 +265,7 @@ with tabs[0]:
             v["interest_rate"] = c1.number_input(LABEL["interest_rate"] + " (%)", 3.0, 25.0, float(base.interest_rate), 0.1)
             v["loan_purpose"] = c2.selectbox(LABEL["loan_purpose"], LEVELS["loan_purpose"], LEVELS["loan_purpose"].index(base.loan_purpose))
             v["education_level"] = st.selectbox(LABEL["education_level"], LEVELS["education_level"], LEVELS["education_level"].index(base.education_level))
-            st.form_submit_button("Score this applicant", type="primary", width="stretch")
+            st.form_submit_button("Score this applicant", type="primary", **STRETCH)
         row = pd.DataFrame([v])[INPUTS]
         unchanged = src.startswith("A real") and all(
             (abs(float(row.iloc[0][c]) - float(base[c])) < 1e-9) if c not in LEVELS else row.iloc[0][c] == base[c] for c in INPUTS)
@@ -254,6 +281,9 @@ with tabs[0]:
                 p["tabpfn"], tfm_contrib = tabpfn_contrib(row)
             except Exception as e:  # noqa: BLE001
                 st.warning(f"TabPFN unavailable ({e}).")
+        elif live and tabpfn_worker()["ready"].is_set():
+            st.warning(f"TabPFN does not reproduce its saved predictions in this environment "
+                       f"(max error {tabpfn_worker()['hello'].get('max_diff', float('nan')):.3f}); live scoring disabled. " + ENV_HINT)
         elif live:
             st.info("⏳ TabPFN is warming up in the background (≈1 min, once). "
                     "Its pre-computed score is shown for test-set applicants; click **Score this applicant** again in a minute.")
@@ -305,7 +335,7 @@ with tabs[0]:
                     y=alt.Y("Feature:N", sort=None, title=None, axis=alt.Axis(labelLimit=180)),
                     color=alt.Color("Effect:N", scale=alt.Scale(domain=["raises P(repay)", "lowers P(repay)"], range=[RAISES, LOWERS]), legend=None),
                     tooltip=["Feature", alt.Tooltip("Contribution:Q", format="+.3f"), "Effect"]).properties(height=230)
-                st.altair_chart(ch, width="stretch")
+                st.altair_chart(ch, **STRETCH)
                 top = d.iloc[0]
                 st.caption(f"Main reason: **{top.Feature}** ({top.Effect}).")
 
@@ -318,15 +348,15 @@ with tabs[1]:
     approve_all = payoff(y_all, TEST.loan_amount, TEST.interest_rate, lgd).sum() / 1e6
     best = perf.loc[perf["Profit (M€)"].idxmax()]
     c = st.columns(4)
-    c[0].metric("Best AUC", f"{perf.AUC.max():.3f}", perf.loc[perf.AUC.idxmax(), "Model"], delta_color="off", delta_arrow="off")
-    c[1].metric("Best profit on 20k loans", f"€{best['Profit (M€)']:.2f}M", best.Model, delta_color="off", delta_arrow="off")
-    c[2].metric("Approve everyone", f"{'−' if approve_all < 0 else ''}€{abs(approve_all):.2f}M", "no model", delta_color="off", delta_arrow="off")
+    c[0].metric("Best AUC", f"{perf.AUC.max():.3f}", perf.loc[perf.AUC.idxmax(), "Model"], delta_color="off", **_ARROW_OFF)
+    c[1].metric("Best profit on 20k loans", f"€{best['Profit (M€)']:.2f}M", best.Model, delta_color="off", **_ARROW_OFF)
+    c[2].metric("Approve everyone", f"{'−' if approve_all < 0 else ''}€{abs(approve_all):.2f}M", "no model", delta_color="off", **_ARROW_OFF)
     c[3].metric("Profit gap best vs worst model", f"€{perf['Profit (M€)'].max() - perf['Profit (M€)'].min():.2f}M",
-                f"{(perf['Profit (M€)'].max() / perf['Profit (M€)'].min() - 1):.1%}", delta_color="off", delta_arrow="off")
+                f"{(perf['Profit (M€)'].max() / perf['Profit (M€)'].min() - 1):.1%}", delta_color="off", **_ARROW_OFF)
     st.dataframe(perf.style.format({"AUC": "{:.4f}", "Gini": "{:.3f}", "Brier": "{:.4f}", "Threshold": "{:.2f}",
                                     "Approval rate": "{:.1%}", "Default rate among approved": "{:.1%}",
                                     "Profit (M€)": "{:.2f}", "Share of max. profit": "{:.1%}"}),
-                 hide_index=True, width="stretch")
+                 hide_index=True, **STRETCH)
     st.caption("Profit on the 20,000 test loans at each model's threshold. 'Share of max. profit' = captured share of the gap "
                "between approving everyone and a perfect oracle. XGBoost is retrained with the notebook's exact code "
                "(AUC 0.916 here vs 0.918 in the notebook: floating-point differences between machines).")
@@ -345,7 +375,7 @@ with tabs[1]:
         tooltip=["Model", alt.Tooltip("Threshold:Q", format=".2f"), alt.Tooltip("Profit (M€):Q", format=".2f")])
     zero = alt.Chart(pd.DataFrame({"y": [approve_all]})).mark_rule(strokeDash=[4, 4], color="#9ca3af").encode(y="y:Q")
     st.markdown("**Profit vs approval threshold** (dots = threshold chosen on validation)")
-    st.altair_chart((base_line + rule + chosen + zero).properties(height=320), width="stretch")
+    st.altair_chart((base_line + rule + chosen + zero).properties(height=320), **STRETCH)
 
     c1, c2 = st.columns(2)
     roc_rows, cal_rows = [], []
@@ -364,14 +394,14 @@ with tabs[1]:
             x="False positive rate:Q", y="True positive rate:Q",
             color=alt.Color("Model:N", scale=MODEL_SCALE, legend=alt.Legend(orient="bottom", title=None)),
             tooltip=["Model", alt.Tooltip("False positive rate:Q", format=".2f"), alt.Tooltip("True positive rate:Q", format=".2f")])
-        st.altair_chart((diag("False positive rate", "True positive rate") + roc).properties(height=300), width="stretch")
+        st.altair_chart((diag("False positive rate", "True positive rate") + roc).properties(height=300), **STRETCH)
     with c2:
         st.markdown("**Calibration** (deciles of predicted probability)")
         cal = alt.Chart(pd.DataFrame(cal_rows)).mark_line(strokeWidth=2, point=alt.OverlayMarkDef(size=60, filled=True)).encode(
             x=alt.X("Predicted P(repay):Q", scale=alt.Scale(domain=[0, 1])), y=alt.Y("Observed repayment rate:Q", scale=alt.Scale(domain=[0, 1])),
             color=alt.Color("Model:N", scale=MODEL_SCALE, legend=alt.Legend(orient="bottom", title=None)),
             tooltip=["Model", alt.Tooltip("Predicted P(repay):Q", format=".3f"), alt.Tooltip("Observed repayment rate:Q", format=".3f")])
-        st.altair_chart((diag("Predicted P(repay)", "Observed repayment rate") + cal).properties(height=300), width="stretch")
+        st.altair_chart((diag("Predicted P(repay)", "Observed repayment rate") + cal).properties(height=300), **STRETCH)
 
 # ==============================================================================================
 # 3. Fairness
@@ -395,16 +425,16 @@ with tabs[2]:
         tooltip=["Model", "Group", "Applicants", alt.Tooltip("Approval rate:Q", format=".1%"),
                  alt.Tooltip("True repayment rate:Q", format=".1%"), alt.Tooltip("TPR (good payers approved):Q", format=".1%"),
                  alt.Tooltip("FPR (defaulters approved):Q", format=".1%")])
-    st.altair_chart(bars.properties(height=300), width="stretch")
+    st.altair_chart(bars.properties(height=300), **STRETCH)
     with st.expander("Table view"):
         st.dataframe(fr.style.format({c: "{:.1%}" for c in fr.columns if "rate" in c or "TPR" in c or "FPR" in c}),
-                     hide_index=True, width="stretch")
+                     hide_index=True, **STRETCH)
 
     st.markdown("**Formal tests** (Hurlin, Pérignon & Saurin): p-values, H0 = *the model is fair*. "
                 "Below 5% → fairness rejected under that definition.")
     ft = pd.DataFrame({NAME[k]: fairness_tests(TEST.y, TEST[f"p_{k}"], TEST[attr], thr[k], TEST.credit_score) for k in KEYS})
     ft.index = ft.index.str.capitalize()
-    st.dataframe(ft.style.format("{:.4f}").map(lambda x: "color:#e34948;font-weight:700" if x < 0.05 else ""), width="stretch")
+    st.dataframe(ft.style.format("{:.4f}").map(lambda x: "color:#e34948;font-weight:700" if x < 0.05 else ""), **STRETCH)
     st.caption("Independence = statistical parity (conditional: within credit-score quintiles) · "
                "Separation = equal opportunity, predictive equality, equalized odds · Sufficiency = same score, same repayment rate.")
 
@@ -414,7 +444,7 @@ with tabs[2]:
     for col, k in zip(tcols, KEYS):
         r = tost_parity(TEST[f"p_{k}"].to_numpy() >= thr[k], TEST.gender, "Female", "Male", delta)
         col.metric(NAME[k], "✅ certified fair" if r["certified fair"] else "⚠️ not certified",
-                   f"gap F−M {-r['gap (ref - protected)']:+.1%}, p = {r['p-value']:.3f}", delta_color="off", delta_arrow="off")
+                   f"gap F−M {-r['gap (ref - protected)']:+.1%}, p = {r['p-value']:.3f}", delta_color="off", **_ARROW_OFF)
     if attr == "employment_status":
         st.info("Employment status is a legitimate risk factor, but it leads to near-total exclusion of students and the unemployed "
                 "(8–24% repayment rate). Whether this is acceptable is a policy decision for the lender, not a statistical one.")
@@ -437,7 +467,7 @@ with tabs[3]:
             x=alt.X("Decisions that flip:Q", axis=alt.Axis(format="%")), y=alt.Y("Model:N", sort=list(COLOR), title=None),
             color=alt.Color("Model:N", scale=MODEL_SCALE, legend=None),
             tooltip=["Model", alt.Tooltip("Decisions that flip:Q", format=".2%"), alt.Tooltip("Mean |Δ P(repay)|:Q", format=".4f")])
-        st.altair_chart(ch.properties(height=170), width="stretch")
+        st.altair_chart(ch.properties(height=170), **STRETCH)
         st.caption(" · ".join(f"{r.Model}: **{r._2:.1%}** of decisions flip" for r in sd_.itertuples()))
     with c2:
         st.markdown("""
@@ -488,7 +518,7 @@ with tabs[4]:
         x=alt.X("Share of importance:Q", axis=alt.Axis(format="%")),
         color=alt.Color("Model:N", scale=MODEL_SCALE, legend=alt.Legend(orient="top", title=None)),
         tooltip=["Model", "Feature", alt.Tooltip("Share of importance:Q", format=".1%"), "Method"])
-    st.altair_chart(ch.properties(height=420), width="stretch")
+    st.altair_chart(ch.properties(height=420), **STRETCH)
     st.markdown("""
 The three models rely on **the same three drivers**: employment status, debt-to-income ratio and credit score.
 Where they differ is **how** they can be explained:
@@ -516,7 +546,7 @@ with tabs[5]:
     trade["Scoring cost"] = ["microseconds", "milliseconds", "≈1 s on GPU (bagged)"]
     st.markdown(f"**Trade-offs at LGD = {lgd:.0%}**")
     st.dataframe(trade.style.format({"AUC": "{:.4f}", "Profit (M€)": "{:.2f}", "Decisions flipped by 1% noise": "{:.1%}"}),
-                 hide_index=True, width="stretch")
+                 hide_index=True, **STRETCH)
     rec = APP / "recommendation.md"
     if rec.exists():
         st.markdown(rec.read_text())
