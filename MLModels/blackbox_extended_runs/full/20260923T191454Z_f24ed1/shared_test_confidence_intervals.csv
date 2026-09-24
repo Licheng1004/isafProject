@@ -1,7 +1,0 @@
-﻿Variant,Metric,CI_low,CI_high
-baseline,AUC,0.9119273514530426,0.9215023229984068
-baseline,PNL_per_applicant,850.236070207025,914.2070373267812
-without_education,AUC,0.9119577182788852,0.921231959109599
-without_education,PNL_per_applicant,849.1398411344537,916.8679322333725
-without_education minus baseline (paired),AUC,-0.0005040824821288898,0.000394785576904444
-without_education minus baseline (paired),PNL_per_applicant,-5.793828601500164,11.912622104191177
