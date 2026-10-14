@@ -1,119 +1,79 @@
-# ISAF project: which model should approve our loans?
+# Loan Approval: Performance, Explainability, Stability and Fairness
 
-HEC Paris, MSc Data Science & AI for Business, *Interpretability, Stability and Algorithmic Fairness*
-(Prof. C. Pérignon), Fall 2026.
+[![CI](https://github.com/Licheng1004/isafProject/actions/workflows/ci.yml/badge.svg)](https://github.com/Licheng1004/isafProject/actions/workflows/ci.yml)
 
-**Client:** a consumer lender. **Decision:** approve a personal loan if the predicted probability that it is paid
-back, P(repay), is above a threshold. **Data:** [Kaggle Playground S5E11](https://www.kaggle.com/competitions/playground-series-s5e11)
-(594k loans, 11 features, synthetic; target `loan_paid_back`, 1 = repaid).
+Compare logistic regression, XGBoost and TabPFN for a consumer lender, with a common 20,000-loan evaluation set and an interactive decision-support app. The question is which model offers the best trade-off between predictive performance, explanations, robustness, fairness and a stated profit model.
 
-We compare three models on the four dimensions of the brief (performance, interpretability, stability, fairness)
-and deliver an interactive web app for the client.
+**Portfolio owner:** Licheng Xiong. **Context:** HEC Paris ISAF team project, Fall 2026, Prof. C. Pérignon. **Stack:** Python, XGBoost, SHAP, scikit-learn, Fairlearn, Streamlit; optional PyTorch/TabPFN.
 
-| | White box | Machine learning | Tabular foundation model |
-|---|---|---|---|
-| Model | Logistic regression | XGBoost (`gender_reweight` variant) | TabPFN-v3.5 (robust: 5-context bagging) |
-| Notebook | `01_logistic_regression.ipynb` | `MLModels/XGBoost_ISAF_final_EN.ipynb` | `TabularFoundationModel/03_tabular_foundation_model.ipynb` |
-| AUC (shared test set) | 0.906 | 0.916 | 0.916 |
-| Profit on 20k test loans (LGD 60%) | €16.7M | €17.4M | €17.4M |
-| Decisions flipped by 1% input noise | 0.2% | 2.2% | 2.1% |
-| Explanation of one decision | exact (coefficients) | exact (TreeSHAP) | approximate (post-hoc), slow |
+## Results and artifacts
 
-*Figures from the web app, same test set and same economics for all models.*
+The committed app artifacts report approximately **0.906 AUC for logistic regression** and **0.916 for XGBoost/TabPFN**, with model-specific validation thresholds and the team's 60% LGD assumption. Profit values represent a modeled outcome on the evaluation snapshot, not revenue realized by a deployed lender.
 
----
+- [My final English XGBoost notebook](MLModels/XGBoost_ISAF_final_EN.ipynb)
+- [Detailed Chinese XGBoost notebook](MLModels/XGBoost_ISAF_final_CN.ipynb)
+- [App and evaluation design](app/README.md)
+- [Team recommendation](app/recommendation.md), a draft requiring team/client review
+- [TabPFN analysis](TabularFoundationModel/03_tabular_foundation_model.ipynb)
 
-## 1. Quick start: run the web app
+## My contribution and team attribution
 
-```bash
-git clone https://gitlab.code.hfactory.io/ethan.ben-hamou/isaf-project.git
-cd isaf-project
-python3.11 -m venv .venv && source .venv/bin/activate    # or: conda create -n isaf python=3.11 && conda activate isaf
-pip install -r requirements.txt
-streamlit run app/streamlit_app.py                        # opens http://localhost:8501
+This is a team project, originally coordinated at `gitlab.code.hfactory.io/ethan.ben-hamou/isaf-project`. The Git history records work by Ethan Benhamou, Najib Nasr, Zixiao Guo and Licheng Xiong. My directly evidenced work is the XGBoost development and evaluation, including annotated course-aligned analysis, sensitive-feature variants, and the final English/Chinese notebook versions. The logistic-regression, foundation-model and app work are shared team deliverables, not claimed as my sole original work.
+
+## Evaluation design
+
+The project compares performance, interpretability, stability and fairness. Development/validation data choose variants and approval thresholds; the shared held-out set reports outcomes. XGBoost analysis includes TreeSHAP, performance decomposition, local explanations, perturbation/seed stability and group/conditional fairness diagnostics. Sensitive-attribute exclusion alone does not remove proxy effects; the recommendation discusses the resulting trade-offs.
+
+## Reproduce the project
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then clone this repository. The committed `.python-version` selects Python 3.12.14; `pyproject.toml` and `uv.lock` lock the direct and transitive Python dependencies. First installation requires internet access.
+
+```sh
+git clone https://github.com/Licheng1004/isafProject.git
+cd isafProject
+uv sync --locked
+uv run --locked python -m streamlit run app/streamlit_app.py
 ```
 
-On Ethan's Mac (conda env `isaf` already set up): `bash app/run_app.sh`. It uses the right Python and keeps the Mac awake.
+The default environment supports the public app, live logistic-regression/XGBoost scoring and **saved TabPFN results** without downloading foundation-model weights. Live TabPFN is off by default.
 
-- The page is usable immediately. **TabPFN warms up in the background for about 1 min** (first launch: its weights
-  are downloaded and a browser tab asks you to accept the free Prior Labs licence). After that, it scores one
-  applicant in about 1 s.
-- Nothing to compute beforehand: the models' artifacts are committed in `app/artifacts/`.
-- At start-up the app **checks that every model reproduces its saved predictions**. If it refuses to start, you are
-  in the wrong environment (see *Troubleshooting*).
+### Verify the installation and published evidence
 
-**What the client can do:** score a real or a new applicant (P(repay), decision and main reasons for each model),
-compare performance and profit, audit fairness (6 formal tests plus an equivalence test), compare stability and
-interpretability, and read the recommendation. The **LGD slider** changes the economics; each model's threshold
-is re-optimised on its own validation sample. Details: [`app/README.md`](app/README.md).
-
----
-
-## 2. Run the full analysis
-
-Use the same environment (`pip install -r requirements.txt`). Each notebook is self-contained. **Run each one from
-its own folder**, because the paths are relative:
-
-| Step | Notebook | Run from | Runtime |
-|---|---|---|---|
-| EDA | `EDA/EDA.ipynb` (also needs `pip install ydata-profiling`) | `EDA/` | a few minutes |
-| White box | `01_logistic_regression.ipynb` | repo root | ~1 min |
-| ML model | `MLModels/XGBoost_ISAF_final_EN.ipynb` (`MODE = "full"`) | `MLModels/` | long: 5 seeds + exact XPER over 512 coalitions. Set `MODE = "smoke"` for a quick check |
-| Foundation model | `TabularFoundationModel/03_tabular_foundation_model.ipynb` | `TabularFoundationModel/` | **~1 min** (all TabPFN results are cached in `outputs/cache/`); ~3 h on a laptop GPU if the cache is deleted |
-| Web-app artifacts | `python app/build_artifacts.py` | repo root | ~20 s, only needed if a model changes |
-
-In Jupyter or VS Code, select the kernel of the environment where you ran `pip install -r requirements.txt`.
-
-```bash
-jupyter notebook                   # or open the .ipynb files in VS Code
-# e.g. TabPFN from the command line:
-cd TabularFoundationModel && jupyter nbconvert --to notebook --execute --inplace 03_tabular_foundation_model.ipynb
+```sh
+uv run --locked python scripts/verify.py
+uv run --locked python -m pytest -q
 ```
 
-TabPFN uses the GPU automatically: Apple-silicon `mps` or NVIDIA `cuda`, otherwise CPU, which is slow if the cache is deleted.
+`--locked` rejects stale project metadata instead of silently changing the dependency versions. Select `.venv` as the Jupyter kernel in VS Code. Notebook path detection supports execution from the repository root or a notebook subdirectory. Runtime installation and synthetic checks do not reproduce a private-data competition score.
 
----
+See [the reproducibility record](REPRODUCIBILITY.md) for the actual checks performed, their scope and any external prerequisites.
 
-## 3. Shared protocol (identical for the three models)
+## Optional live foundation-model scoring
 
-- **Test set:** `data/test_eval_20k.csv`, 20,000 rows removed from all training data and used for reporting only.
-- **Economics:** a repaid loan earns `loan_amount × interest_rate / 100`, a default costs `LGD × loan_amount` with
-  **LGD = 60%**, a rejected loan earns 0.
-- **Threshold:** tuned on each model's own validation split, never on the test set.
-- **Inputs:** `gender` and `marital_status` are **never model inputs**, because using them in credit decisions is
-  prohibited (EU Directive 2004/113/EC, US ECOA). They are kept only to **audit** fairness, together with
-  `education_level` and `employment_status`.
-- **Fairness toolkit** (course methods), shared in `TabularFoundationModel/src/isaf_eval.py`:
-  - `fairness_tests`: statistical and conditional parity, equal opportunity, predictive equality, equalized odds, sufficiency;
-  - `tost_parity`: equivalence test;
-  - `fpdp`: fairness PDP and candidate variables;
-  - `xper`: performance decomposition;
-  - `lime_explain`: local surrogate.
-
----
-
-## 4. Repository structure
-
-```
-data/                         train.csv (Kaggle), test_eval_20k.csv (shared test set)
-EDA/                          exploratory analysis
-01_logistic_regression.ipynb  white-box model
-MLModels/                     XGBoost (final: XGBoost_ISAF_final_EN.ipynb) + earlier experiments
-TabularFoundationModel/       TabPFN notebook, src/ (toolkit + TabPFN wrapper), outputs/ (figures, cache, model)
-app/                          Streamlit web app, its artifacts, build script, recommendation
-project_request/              brief and course slides
-requirements.txt              one environment for everything
+```sh
+uv sync --locked --extra foundation
+uv run --locked --extra foundation python -m streamlit run app/streamlit_app.py
 ```
 
----
+Enable **Live TabPFN scoring** only after accepting the provider's model license and arranging authorized weight access. First use downloads weights; CPU/GPU memory, access and runtime depend on the provider and machine. The worker isolates PyTorch from XGBoost to avoid the team's observed macOS OpenMP conflict. A Python lock cannot grant model access or guarantee identical predictions across hardware. The app checks loaded-model predictions against saved artifacts.
 
-## 5. Troubleshooting
+## Data and complete analysis
 
-| Problem | Fix |
-|---|---|
-| App stops with *"The models do not reproduce their saved predictions"* | Wrong environment: xgboost 2.x silently misreads the xgboost-3 model (errors up to 0.33). Run `pip install -r requirements.txt` and launch from that environment. |
-| `TypeError: altair_chart() got an unexpected keyword argument 'width'` | Old copy of the app: `git pull`. |
-| TabPFN stays "warming up" | Normal for about 1 min. The first time, accept the Prior Labs licence in the browser tab that opens. |
-| TabPFN notebook or app hangs / crashes when xgboost is imported | torch and xgboost ship conflicting OpenMP runtimes on macOS. Never import both in the same process (the app runs TabPFN in a separate worker for this reason). |
-| Long TabPFN computations freeze | The Mac went to sleep. Keep it plugged in with the lid open (`app/run_app.sh` uses `caffeinate`). |
-| `FileNotFoundError: data/...` | Run the notebook from its own folder (table in section 2). |
+The synthetic loan data originate from [Kaggle Playground S5E11](https://www.kaggle.com/competitions/playground-series-s5e11). The repository currently includes `data/train.csv` and the team's `data/test_eval_20k.csv`; preserve these matching inputs for the shared protocol. The app uses committed `app/artifacts/` and can run without retraining.
+
+Use `uv run --locked python -m jupyterlab` to inspect the analyses. The final XGBoost notebook locates the project root automatically; the logistic-regression notebook should be run from the root, and the TabPFN notebook from `TabularFoundationModel/` with the foundation extra. Rebuilding the app's artifacts requires the full analyses and the matching saved TabPFN outputs; it is not the quick-start route.
+
+## Repository map
+
+| Path | Purpose |
+| --- | --- |
+| `MLModels/` | XGBoost final analysis and historical experiments |
+| `01_logistic_regression.ipynb` | Team white-box baseline |
+| `TabularFoundationModel/` | Team TabPFN analysis, saved results and worker support |
+| `app/` | Streamlit app, models and comparison artifacts |
+| `data/` | Synthetic loan inputs and shared evaluation set |
+| `scripts/`, `tests/` | Public artifact/model and app verification |
+
+## Limits and reuse
+
+This is coursework on synthetic data, not a validated lending policy. Results depend on the split, categorical encoding, library versions and profit assumptions. The final notebooks are the supported research entry points; older experiments may require additional packages or different inputs. Model/data providers retain their terms and the README grants no new reuse license.

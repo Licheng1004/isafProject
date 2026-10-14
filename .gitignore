@@ -4,3 +4,9 @@ __pycache__/
 .DS_Store
 MLModels/catboost_info/
 MLModels/submission_*.csv
+
+# Local environments and verification outputs
+.venv/
+__pycache__/
+.pytest_cache/
+.reproduction/

@@ -1,0 +1,31 @@
+[project]
+name = "isafproject"
+version = "1.0.0"
+description = "Reproducible isafProject portfolio project by Licheng Xiong"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "numpy>=2.0",
+  "pandas>=2.2",
+  "scipy>=1.13",
+  "scikit-learn>=1.6",
+  "statsmodels>=0.14",
+  "matplotlib>=3.9",
+  "joblib",
+  "shap>=0.49",
+  "fairlearn>=0.13",
+  "xgboost==3.2.0",
+  "ipykernel",
+  "streamlit>=1.50",
+  "altair>=5",
+  "jupyterlab>=4,<5"
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "nbformat>=5,<6", "nbconvert>=7,<8", "ipykernel>=6,<8"]
+
+[tool.uv]
+package = false
+
+[project.optional-dependencies]
+foundation = ["torch>=2.5", "tabpfn>=9.0"]

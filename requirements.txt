@@ -1,3 +1,4 @@
+# Legacy/direct dependency list. Use root pyproject.toml + uv.lock for the supported reproducible setup.
 # One environment for the whole project (Python 3.11 recommended).
 # notebooks
 numpy>=2.0
