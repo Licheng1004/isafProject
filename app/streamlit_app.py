@@ -8,6 +8,7 @@ Needs the artifacts built by `python app/build_artifacts.py`.
 from __future__ import annotations
 
 import json
+from importlib.util import find_spec
 import subprocess
 import sys
 import threading
@@ -73,15 +74,15 @@ def load_artifacts():
 
 @st.cache_resource(show_spinner=False)
 def load_xgb():
-    b = xgb.Booster(); b.load_model(str(ART / "xgb_model.json")); return b
+    b = xgb.Booster(); b.load_model(bytearray((ART / "xgb_model.json").read_bytes())); return b
 
 if not (ART / "test_predictions.csv.gz").exists():
     st.error("Artifacts missing: run `python app/build_artifacts.py` first."); st.stop()
 TEST, VALID, LR, XMETA, TYPICAL, NOISE, TFM_SUMMARY = load_artifacts()
 BOOSTER = load_xgb()
 ENV_HINT = ("Run the app with the project environment (xgboost ≥ 3, tabpfn ≥ 9): "
-            "`pip install -r app/requirements.txt`, then `streamlit run app/streamlit_app.py` from that environment "
-            "(on Ethan's Mac: `bash app/run_app.sh`).")
+            "`uv sync --locked`, then `uv run --locked streamlit run app/streamlit_app.py`. "
+            "For live TabPFN add `--extra foundation` to both commands and arrange authorized weight access.")
 LEVELS = {c: sorted(TEST[c].unique()) for c in ["loan_purpose", "grade_subgrade", "employment_status", "education_level"]}
 
 # ----------------------------------------------------------------------------------------------
@@ -219,9 +220,10 @@ with st.sidebar:
                     help="Share of the loan lost when a borrower defaults. Team convention: 60%. "
                          "Each model's approval threshold is re-optimised on its own validation sample.")
     st.markdown(f"**Economics per loan**  \n• repaid → + amount × interest rate  \n• default → − {lgd:.0%} × amount  \n• rejected → 0")
-    live = st.toggle("Live TabPFN scoring", value=True,
+    live = st.toggle("Live TabPFN scoring", value=False, disabled=find_spec("tabpfn") is None,
                      help="Starts the robust TabPFN in a background process (≈1 min, once). "
-                          "Needed to score custom applicants with TabPFN and to explain its decisions.")
+                          "Needs the optional foundation environment and authorized model weights. "
+                          "Saved TabPFN results remain available without live scoring.")
     thr = thresholds(lgd)
     st.markdown("**Approval thresholds** (P(repay) ≥ t)")
     for k in KEYS:

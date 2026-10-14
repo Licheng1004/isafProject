@@ -1,12 +1,16 @@
 # Web app: loan approval, three models compared
 
+See [the root README](../README.md) and [reproducibility record](../REPRODUCIBILITY.md) for the supported environment. Live TabPFN is optional and off by default.
+
 An interactive app for the client: score an applicant with the three models, see *why*, and compare them
 on the four dimensions of the brief (performance, fairness, stability, interpretability) plus a recommendation.
 
-```bash
-pip install -r app/requirements.txt         # xgboost >= 3 and tabpfn >= 9 are REQUIRED (see below)
-streamlit run app/streamlit_app.py          # opens http://localhost:8501
-# on Ethan's Mac (conda env "isaf"):  bash app/run_app.sh
+```sh
+uv sync --locked
+uv run --locked python -m streamlit run app/streamlit_app.py
+# Optional live TabPFN, after provider authorization:
+# uv sync --locked --extra foundation
+# uv run --locked --extra foundation python -m streamlit run app/streamlit_app.py
 ```
 
 ⚠️ **Use the right environment.** The saved XGBoost model comes from xgboost 3. Read by xgboost 2.x, it loads
